@@ -44,8 +44,9 @@ void main() {
   float phase = uTime * 0.34 + 0.14 * sin(uTime * 0.21);
   float wave = sin(dot(samplePoint, direction) * uFrequency * breath + phase);
 
-  // Derivative antialiasing keeps high-frequency thresholds crisp but less jagged.
-  float edge = max(fwidth(wave) * 0.7, 0.018);
+  // A small frequency-aware transition keeps edges clean without requiring the
+  // optional WebGL 1 standard-derivatives extension (important on older devices).
+  float edge = 0.026 + 0.0014 * uFrequency;
   float monochrome = smoothstep(-edge, edge, wave);
   gl_FragColor = vec4(vec3(monochrome), 1.0);
 }

@@ -7,10 +7,16 @@ An interactive, full-screen study in black-and-white periodic waves. This first 
 The shader files must be served over HTTP (opening `index.html` as a `file://` URL will usually be blocked by the browser):
 
 ```bash
-python3 -m http.server 8000
+npm run dev
 ```
+ 
+Then open <http://localhost:5173>. The dependency-free development server uses Node.js directly, so no install step is necessary. The only browser dependency is p5.js 1.11.10, loaded from jsDelivr, so the first page load requires a network connection.
 
-Then open <http://localhost:8000>. The only external dependency is p5.js 1.11.10, loaded from jsDelivr, so the first load requires a network connection.
+## Publish on GitHub Pages
+
+The artwork is a static site; `npm run dev` is only a convenience for local development and is not required in production. A GitHub Actions workflow deploys the repository root whenever `main` is updated. In the repository, choose **Settings → Pages → Build and deployment → Source: GitHub Actions** once, then push or merge to `main`. The published project URL will be `https://<username>.github.io/<repository>/`.
+
+The `.nojekyll` marker tells Pages to serve the shader and source directories exactly as committed. All browser asset links are relative, so a project subpath such as `/nightmare/` is supported.
 
 ## Interaction
 
@@ -49,7 +55,9 @@ This is **a research-informed artistic interpretation, not a scientific model or
 
 ```text
 index.html             page shell and p5.js dependency
+package.json           dependency-free npm development commands
 style.css              full-viewport presentation
+scripts/dev-server.mjs local static development server
 src/main.js            p5 lifecycle and application assembly
 src/artwork.js         WebGL renderer and uniform updates
 src/interaction.js     pointer and keyboard input
