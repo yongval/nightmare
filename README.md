@@ -9,7 +9,7 @@ The shader files must be served over HTTP (opening `index.html` as a `file://` U
 ```bash
 npm run dev
 ```
-
+ 
 Then open <http://localhost:5173>. The dependency-free development server uses Node.js directly, so no install step is necessary. The only browser dependency is p5.js 1.11.10, loaded from jsDelivr, so the first page load requires a network connection.
 
 ## Publish on GitHub Pages
