@@ -10,8 +10,8 @@ const sketch = (p) => {
 
   p.preload = () => {
     shaderProgram = p.loadShader(
-      "shaders/vertex.glsl?v=wallpaper-v2",
-      "shaders/fragment.glsl?v=wallpaper-v2",
+      "shaders/vertex.glsl?v=wallpaper-v3",
+      "shaders/fragment.glsl?v=wallpaper-v3",
     );
   };
 
