@@ -23,15 +23,23 @@ Do not combine a Jekyll workflow with the `/docs` source. This project does not 
 
 The `docs/.nojekyll` marker tells Pages to serve the shader and source directories exactly as committed. All browser asset links are relative, so a project subpath such as `/nightmare/` is supported.
 
+### Verify the deployed release
+
+The visible-controls release marks its `<body>` with `data-release="controls-v2"`. If the public page has no control bar, use **View Source** and search for `controls-v2`. When it is absent, Pages is serving an older artifact: run the **Deploy static artwork to GitHub Pages** workflow from `main`. The workflow now refuses to deploy unless both the release marker and the artwork controls are present.
+
 ## Interaction
 
 - **Move left/right:** rotate the underlying wave vector.
 - **Move up/down:** move from broad, slow bands to dense, intense bands.
-- **Click:** morph through rolls, square/grid interference, hexagonal interference, and rotational symmetry.
-- **M:** reorganize smoothly through Cartesian stripes, a concentric tunnel, radial rays, and a spiral.
-- **1–4:** select one of those coordinate mappings directly.
-- **S:** cycle the rotational structures 2222, 333, 442, and 632.
-- **D:** compare the simple pattern space and transformed perceptual space side by side.
+- **Click the artwork** or use the **PATTERN** button: morph through rolls, square/grid interference, hexagonal interference, and rotational symmetry.
+- **SPACE button:** reorganize smoothly through Cartesian stripes, a concentric tunnel, radial rays, and a spiral.
+- **ROTATION button:** cycle the rotational structures 2222, 333, 442, and 632.
+- **VIEW button:** compare the simple pattern space and transformed perceptual space side by side.
+- **MOTION button:** pause or resume automatic movement.
+
+The compact on-screen controls are the primary interface and always show the current state. Optional presentation shortcuts remain available:
+
+- **M / S / D:** cycle space, rotation, or research view.
 - **I:** toggle a minimal research information readout.
 - **Space:** pause/resume the internal breathing motion.
 - **R:** return to the initial state.
@@ -39,7 +47,7 @@ The `docs/.nojekyll` marker tells Pages to serve the shader and source directori
 
 Fast pointer movement briefly increases deterministic instability; stopping lets the field reorganize and settle.
 
-There is intentionally no visible interface in this immersive version.
+The controls stay deliberately compact and monochrome so the geometry remains the dominant visual element.
 
 ## Mathematical system
 

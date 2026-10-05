@@ -26,7 +26,7 @@ const sketch = (p) => {
   p.mouseMoved = () => interaction.pointerMovedAt(p.mouseX, p.mouseY);
   p.mouseDragged = () => interaction.pointerMovedAt(p.mouseX, p.mouseY);
   p.touchMoved = () => interaction.pointerMovedAt(p.mouseX, p.mouseY);
-  p.mouseClicked = () => interaction.clicked();
+  p.mouseClicked = (event) => interaction.clicked(event);
   p.keyPressed = () => interaction.keyPressed(p.key, p.keyCode);
   p.windowResized = () => p.resizeCanvas(p.windowWidth, p.windowHeight);
 };
