@@ -35,39 +35,6 @@ noscript {
   font: 12px/1.4 monospace;
 }
 
-#research-labels,
-#information {
-  position: fixed;
-  z-index: 2;
-  color: #fff;
-  font: 10px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
-  letter-spacing: 0.12em;
-  mix-blend-mode: difference;
-  pointer-events: none;
-}
-
-#research-labels {
-  display: none;
-  inset: 14px 18px auto;
-  justify-content: space-between;
-}
-
-#research-labels.visible {
-  display: flex;
-}
-
-#information {
-  display: none;
-  left: 18px;
-  bottom: 16px;
-  margin: 0;
-  white-space: pre;
-}
-
-#information.visible {
-  display: block;
-}
-
 #controls {
   position: fixed;
   z-index: 3;

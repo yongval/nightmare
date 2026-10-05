@@ -27,22 +27,18 @@ The `docs/.nojekyll` marker tells Pages to serve the shader and source directori
 
 ### Verify the deployed release
 
-The visible-controls release marks its `<body>` with `data-release="controls-v2"`. If the public page has no control bar, use **View Source** and search for `controls-v2`. When it is absent, Pages is serving an older artifact: run the **Deploy static artwork to GitHub Pages** workflow from `main`. The workflow now refuses to deploy unless both the release marker and the artwork controls are present.
+The planar-wallpaper release marks its `<body>` with `data-release="wallpaper-v1"`. If the public page has the old five-button panel, use **View Source** and search for `wallpaper-v1`. When it is absent, Pages is serving an older artifact: run the **Deploy static artwork to GitHub Pages** workflow from `main`. The workflow refuses to deploy unless both the release marker and the artwork controls are present.
 
 ## Interaction
 
 - **Move left/right:** rotate the underlying wave vector.
 - **Move up/down:** move from broad, slow bands to dense, intense bands.
-- **Click the artwork** or use the **PATTERN** button: morph through rolls, square/grid interference, hexagonal interference, and rotational symmetry.
-- **SPACE button:** reorganize smoothly through Cartesian stripes, a concentric tunnel, radial rays, and a spiral.
-- **ROTATION button:** cycle the rotational structures 2222, 333, 442, and 632.
-- **VIEW button:** compare the simple pattern space and transformed perceptual space side by side.
+- **Click the artwork** or use the **SYMMETRY** button: cycle the repeating planar groups 2222, 333, 442, and 632.
 - **MOTION button:** pause or resume automatic movement.
 
 The compact on-screen controls are the primary interface and always show the current state. Optional presentation shortcuts remain available:
 
-- **M / S / D:** cycle space, rotation, or research view.
-- **I:** toggle a minimal research information readout.
+- **S:** cycle symmetry group.
 - **Space:** pause/resume the internal breathing motion.
 - **R:** return to the initial state.
 - **F:** enter or leave fullscreen.
@@ -53,27 +49,24 @@ The controls stay deliberately compact and monochrome so the geometry remains th
 
 ## Mathematical system
 
-The source field is a plane wave
+This version begins with an asymmetric continuous glyph made from line and arc distance fields. It constructs a rotational orbit of that glyph, then repeats the orbit on a compatible translation lattice:
 
-`P(q) = sin(f (cos(a) q.x + sin(a) q.y) + phase)`
+- **2222 / p2:** 2-fold glyph on a square translation lattice
+- **333 / p3:** 3-fold glyph on a triangular translation lattice
+- **442 / p4:** 4-fold glyph on a square translation lattice
+- **632 / p6:** 6-fold glyph on a triangular translation lattice
 
-where `a` is mouse-controlled orientation and `f` is mouse-controlled spatial frequency. The fragment shader also derives log-polar coordinates:
+Repeating neighboring cells in the fragment shader makes the field continuous across every tile boundary. The asymmetric seed and rotational copies avoid introducing reflection as a construction operation. The notation describes the orders of rotation centers present in each orientation-preserving wallpaper group; it is no longer used merely as a visual label.
 
-- `r = sqrt(x² + y²)`
-- `theta = atan(y, x)`
-- `q = (log(r + epsilon), theta)`
-
-Sampling `log(r)` produces nested tunnel rings; sampling integer multiples of `theta` produces seamless radial rays; combining both produces a spiral impression. The phases from neighboring mapping states are crossfaded rather than switched, so the image visibly reorganizes. Two perpendicular waves create the square family, while three waves separated by 60° create hexagonal interference. Folded angular coordinates emphasize 2-, 3-, 4-, or 6-fold rotational order. A slow sinusoidal change in scale and phase supplies restrained expansion and contraction.
-
-Instability is deterministic rather than random: mouse velocity raises its amplitude, and paired sine/cosine harmonics bend the sampling domain before slowly settling. Mathematical order therefore remains visible even at maximum disturbance.
+Mouse X rotates the complete plane and mouse Y changes the translation-lattice density. Instability remains deterministic rather than random: mouse velocity briefly raises the amplitude of paired sine/cosine domain bends, then the pattern settles. A restrained scale oscillation supplies the breathing motion.
 
 The equations are evaluated once per pixel in GLSL. JavaScript only smooths interaction values and passes uniforms, keeping rendering suitable for real time.
 
 ## Research and artistic context
 
-The project is informed by Heinrich Klüver's descriptions of geometric *form constants* and by later work from Bressloff and collaborators on geometric visual hallucinations, Euclidean symmetry, cortical pattern formation, and retino-cortical mapping. The movement from a simple periodic field to tunnel-, ray-, and spiral-like geometry takes that research as a conceptual point of departure.
+The project is informed by Heinrich Klüver's descriptions of geometric *form constants* and by later work from Bressloff and collaborators on geometric visual hallucinations, Euclidean symmetry, cortical pattern formation, and retino-cortical mapping. The emergence of complex visual structure from a small periodic construction takes that research as a conceptual point of departure.
 
-This is **a research-informed artistic interpretation, not a scientific model or an explanation of fever dreams**. In particular, the shader's interpolated mapping, breathing, tonal treatment, and association with a personal fever-dream memory are aesthetic decisions. Its selected rotational structures use planar symmetry material from the associated course as an artistic extension; the project does not claim that hallucination research is based on the 17 wallpaper groups or that its shorthand labels implement full wallpaper groups.
+This is **a research-informed artistic interpretation, not a scientific model or an explanation of fever dreams**. In particular, the breathing, instability, glyph design, tonal treatment, and association with a personal fever-dream memory are aesthetic decisions. The four constructions use planar symmetry material from the associated course as an artistic extension; the project does not claim that hallucination research is based on the 17 wallpaper groups.
 
 ## Structure
 
@@ -85,13 +78,13 @@ docs/style.css         full-viewport presentation
 docs/src/main.js       p5 lifecycle and application assembly
 docs/src/artwork.js    WebGL renderer and uniform updates
 docs/src/interaction.js pointer and keyboard input
-docs/src/parameters.js state, mapping presets, and smoothing
+docs/src/parameters.js symmetry state and interaction smoothing
 docs/shaders/*.glsl    full-canvas vertex and fragment shaders
 docs/.nojekyll         disable Jekyll processing
 ```
 
 ## Implemented development phases
 
-The second iteration adds square and hexagonal interference fields, controlled pointer-driven instability, selected 2/3/4/6-fold rotational structures, smooth family morphing, a split research view, and an information overlay. The symmetry labels are artistic shorthand for rotational emphasis rather than complete implementations of wallpaper groups.
+The current iteration deliberately reduces the system to four continuous planar constructions, one symmetry control, and one motion control. Each symmetry selection now changes the entire repeating field rather than affecting only a separate rotational mode.
 
 Potential later work includes more rigorous reflection and glide-reflection constructions, reproducible saved states, accessibility controls for visual intensity, and performance profiling across mobile GPUs.
