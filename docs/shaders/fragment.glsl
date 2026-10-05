@@ -32,51 +32,55 @@ float seedGlyph(vec2 p) {
   return max(stem, hook * 0.85);
 }
 
-float rotationalGlyph(vec2 p, float folds) {
-  float mark = 0.0;
-  for (int i = 0; i < 6; i++) {
-    if (float(i) >= folds) continue;
-    float angle = -2.0 * PI * float(i) / folds;
-    mat2 rotation = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
-    mark = max(mark, seedGlyph(rotation * p));
-  }
-  return mark;
+vec2 rotatePoint(vec2 p, float angle) {
+  return mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
 }
 
-// Repeat a rotational glyph on a square lattice. Its compatible point groups
-// yield 2222 (p2) and 442 (p4), including their lower-order rotation centers.
-float squareWallpaper(vec2 p, float folds) {
-  vec2 nearest = floor(p + 0.5);
-  float field = 0.0;
-  for (int y = -1; y <= 1; y++) {
-    for (int x = -1; x <= 1; x++) {
-      vec2 local = p - (nearest + vec2(float(x), float(y)));
-      field = max(field, rotationalGlyph(local, folds));
-    }
-  }
-  return field;
+float glyph2(vec2 p) {
+  return max(seedGlyph(p), seedGlyph(-p));
 }
 
-// A triangular translation lattice supports 333 (p3) and 632 (p6).
-float triangularWallpaper(vec2 p, float folds) {
+float glyph3(vec2 p) {
+  return max(seedGlyph(p), max(
+    seedGlyph(rotatePoint(p, -2.0 * PI / 3.0)),
+    seedGlyph(rotatePoint(p, -4.0 * PI / 3.0))
+  ));
+}
+
+float glyph4(vec2 p) {
+  return max(glyph2(p), max(
+    seedGlyph(rotatePoint(p, -PI * 0.5)),
+    seedGlyph(rotatePoint(p, -PI * 1.5))
+  ));
+}
+
+float glyph6(vec2 p) {
+  return max(glyph3(p), max(
+    seedGlyph(rotatePoint(p, -PI / 3.0)),
+    max(seedGlyph(rotatePoint(p, -PI)), seedGlyph(rotatePoint(p, -5.0 * PI / 3.0)))
+  ));
+}
+
+// Nearest square-lattice cell, used by 2222 (p2) and 442 (p4).
+vec2 squareCell(vec2 p) {
+  return fract(p + 0.5) - 0.5;
+}
+
+// Nearest triangular-lattice cell, used by 333 (p3) and 632 (p6).
+vec2 triangularCell(vec2 p) {
   vec2 lattice = vec2(p.x - p.y / SQRT3, 2.0 * p.y / SQRT3);
-  vec2 nearest = floor(lattice + 0.5);
-  float field = 0.0;
-  for (int y = -1; y <= 1; y++) {
-    for (int x = -1; x <= 1; x++) {
-      vec2 cell = nearest + vec2(float(x), float(y));
-      vec2 center = vec2(cell.x + 0.5 * cell.y, 0.5 * SQRT3 * cell.y);
-      field = max(field, rotationalGlyph(p - center, folds));
-    }
-  }
-  return field;
+  vec2 cell = floor(lattice + 0.5);
+  vec2 center = vec2(cell.x + 0.5 * cell.y, 0.5 * SQRT3 * cell.y);
+  return p - center;
 }
 
 float wallpaper(vec2 p, float group) {
-  float p2 = squareWallpaper(p, 2.0);
-  float p3 = triangularWallpaper(p, 3.0);
-  float p4 = squareWallpaper(p, 4.0);
-  float p6 = triangularWallpaper(p, 6.0);
+  vec2 square = squareCell(p);
+  vec2 triangular = triangularCell(p);
+  float p2 = glyph2(square);
+  float p3 = glyph3(triangular);
+  float p4 = glyph4(square);
+  float p6 = glyph6(triangular);
   return p2 * bandWeight(group, 0.0)
     + p3 * bandWeight(group, 1.0)
     + p4 * bandWeight(group, 2.0)

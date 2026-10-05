@@ -35,6 +35,21 @@ noscript {
   font: 12px/1.4 monospace;
 }
 
+#status {
+  position: fixed;
+  z-index: 4;
+  inset: 16px auto auto 18px;
+  margin: 0;
+  color: #fff;
+  font: 10px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.12em;
+  pointer-events: none;
+}
+
+#status.ready {
+  display: none;
+}
+
 #controls {
   position: fixed;
   z-index: 3;

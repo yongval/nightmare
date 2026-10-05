@@ -27,7 +27,7 @@ The `docs/.nojekyll` marker tells Pages to serve the shader and source directori
 
 ### Verify the deployed release
 
-The planar-wallpaper release marks its `<body>` with `data-release="wallpaper-v1"`. If the public page has the old five-button panel, use **View Source** and search for `wallpaper-v1`. When it is absent, Pages is serving an older artifact: run the **Deploy static artwork to GitHub Pages** workflow from `main`. The workflow refuses to deploy unless both the release marker and the artwork controls are present.
+The planar-wallpaper release marks its `<body>` with `data-release="wallpaper-v2"`. If the public page is blank or has the old five-button panel, use **View Source** and search for `wallpaper-v2`. When it is absent, Pages is serving an older artifact: run the **Deploy static artwork to GitHub Pages** workflow from `main`. The workflow refuses to deploy unless both the release marker and the artwork controls are present. Versioned shader URLs prevent a browser from reusing the earlier blank shader.
 
 ## Interaction
 

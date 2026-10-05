@@ -6,9 +6,13 @@ const sketch = (p) => {
   let artwork;
   let interaction;
   let shaderProgram;
+  let firstFrame = true;
 
   p.preload = () => {
-    shaderProgram = p.loadShader("shaders/vertex.glsl", "shaders/fragment.glsl");
+    shaderProgram = p.loadShader(
+      "shaders/vertex.glsl?v=wallpaper-v2",
+      "shaders/fragment.glsl?v=wallpaper-v2",
+    );
   };
 
   p.setup = () => {
@@ -22,7 +26,13 @@ const sketch = (p) => {
     interaction = new Interaction(p, parameters);
   };
 
-  p.draw = () => artwork.render();
+  p.draw = () => {
+    artwork.render();
+    if (firstFrame) {
+      document.querySelector("#status").classList.add("ready");
+      firstFrame = false;
+    }
+  };
   p.mouseMoved = () => interaction.pointerMovedAt(p.mouseX, p.mouseY);
   p.mouseDragged = () => interaction.pointerMovedAt(p.mouseX, p.mouseY);
   p.touchMoved = () => interaction.pointerMovedAt(p.mouseX, p.mouseY);
