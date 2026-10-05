@@ -5,21 +5,6 @@ export class Interaction {
     this.pointerMoved = false;
     this.previousX = null;
     this.previousY = null;
-    this.bindControls();
-  }
-
-  bindControls() {
-    document.querySelector("#controls").addEventListener("click", (event) => {
-      const action = event.target.closest("button")?.dataset.action;
-      if (!action) return;
-      event.stopPropagation();
-
-      if (action === "family") this.parameters.cycleFamily();
-      if (action === "mapping") this.parameters.cycleMapping();
-      if (action === "symmetry") this.parameters.cycleSymmetry();
-      if (action === "research") this.parameters.debug = !this.parameters.debug;
-      if (action === "pause") this.parameters.paused = !this.parameters.paused;
-    });
   }
 
   updatePointer(x, y) {
@@ -40,8 +25,7 @@ export class Interaction {
     return false;
   }
 
-  clicked(event) {
-    if (event?.target?.closest?.("#controls")) return false;
+  clicked() {
     this.parameters.cycleFamily();
     return false;
   }
@@ -61,6 +45,8 @@ export class Interaction {
       this.p.fullscreen(!this.p.fullscreen());
     } else if (key.toLowerCase() === "r") {
       this.parameters.reset();
+    } else if (/^[1-4]$/.test(key)) {
+      this.parameters.selectMapping(Number(key) - 1);
     } else {
       return true;
     }

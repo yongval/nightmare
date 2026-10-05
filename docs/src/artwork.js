@@ -5,12 +5,6 @@ export class Artwork {
     this.parameters = parameters;
     this.information = document.querySelector("#information");
     this.researchLabels = document.querySelector("#research-labels");
-    this.controlValues = Object.fromEntries(
-      [...document.querySelectorAll("#controls button")].map((button) => [
-        button.dataset.action,
-        { button, value: button.querySelector("strong") },
-      ]),
-    );
   }
 
   render() {
@@ -43,17 +37,6 @@ export class Artwork {
         `INSTABILITY ${state.instability.toFixed(2)}`,
       ].join("\n");
     }
-
-    const familyNames = ["ROLLS", "GRID", "HEXAGONAL", "ROTATIONAL"];
-    const mappings = ["CARTESIAN", "TUNNEL", "RADIAL", "SPIRAL"];
-    const symmetries = ["2222", "333", "442", "632"];
-    this.controlValues.family.value.textContent = familyNames[state.familyIndex];
-    this.controlValues.mapping.value.textContent = mappings[state.mappingIndex];
-    this.controlValues.symmetry.value.textContent = symmetries[state.symmetryIndex];
-    this.controlValues.research.value.textContent = state.debug ? "SPLIT" : "FULL";
-    this.controlValues.pause.value.textContent = state.paused ? "PAUSED" : "PLAYING";
-    this.controlValues.research.button.setAttribute("aria-pressed", state.debug);
-    this.controlValues.pause.button.setAttribute("aria-pressed", state.paused);
 
     // A single clip-space rectangle gives the fragment shader one invocation per pixel.
     p.noStroke();
