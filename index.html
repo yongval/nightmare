@@ -3,19 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <title>Fever Field</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta http-equiv="refresh" content="0; url=docs/" />
+    <title>Opening Fever Field…</title>
+    <script>
+      const destination = new URL("docs/", window.location.href);
+      destination.search = window.location.search;
+      destination.hash = window.location.hash;
+      window.location.replace(destination);
+    </script>
   </head>
   <body>
-    <main id="artwork" aria-label="Interactive black-and-white geometric artwork"></main>
-    <div id="research-labels" aria-hidden="true">
-      <span>CORTICAL / PATTERN SPACE</span>
-      <span>PERCEPTUAL / TRANSFORMED SPACE</span>
-    </div>
-    <output id="information" aria-live="polite"></output>
-    <noscript>This artwork requires JavaScript and WebGL.</noscript>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"></script>
-    <script type="module" src="src/main.js"></script>
+    <p><a href="docs/">Open Fever Field</a></p>
   </body>
 </html>

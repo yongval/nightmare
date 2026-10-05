@@ -21,6 +21,8 @@ The artwork is a static site; `npm run dev` is only a convenience for local deve
 
 Do not combine a Jekyll workflow with the `/docs` source. This project does not use Jekyll, Ruby, themes, or an `assets/css/style.scss` build step. The published project URL will be `https://<username>.github.io/<repository>/`.
 
+If Pages is accidentally configured to publish `main` from `/ (root)`, the root `index.html` now redirects to `docs/` instead of letting Jekyll turn this README into the website. A root `.nojekyll` marker also disables that unintended README/Jekyll rendering path.
+
 The `docs/.nojekyll` marker tells Pages to serve the shader and source directories exactly as committed. All browser asset links are relative, so a project subpath such as `/nightmare/` is supported.
 
 ### Verify the deployed release
