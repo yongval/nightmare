@@ -1,11 +1,14 @@
 const TAU = Math.PI * 2;
 
 export const MAPPING_PRESETS = [
-  { name: "stripes", amount: 0, axis: 0.5 },
-  { name: "tunnel", amount: 1, axis: 0 },
-  { name: "radial", amount: 1, axis: 1 },
-  { name: "spiral", amount: 1, axis: 0.42 },
+  "cartesian",
+  "tunnel",
+  "radial",
+  "spiral",
 ];
+
+export const PATTERN_FAMILIES = ["rolls", "square / grid", "hexagonal", "rotational symmetry"];
+export const SYMMETRY_TYPES = ["2222", "333", "442", "632"];
 
 const approach = (current, target, responsiveness, deltaSeconds) => {
   const weight = 1 - Math.exp(-responsiveness * deltaSeconds);
@@ -20,9 +23,15 @@ export class Parameters {
   reset() {
     this.orientation = this.targetOrientation = 0.12 * TAU;
     this.frequency = this.targetFrequency = 12;
-    this.mappingAmount = this.targetMappingAmount = 0;
-    this.mappingAxis = this.targetMappingAxis = 0.5;
+    this.mapping = this.targetMapping = 0;
+    this.family = this.targetFamily = 0;
+    this.symmetry = this.targetSymmetry = 0;
+    this.instability = this.targetInstability = 0.08;
     this.mappingIndex = 0;
+    this.familyIndex = 0;
+    this.symmetryIndex = 0;
+    this.debug = false;
+    this.showInformation = false;
     this.paused = false;
     this.elapsed = 0;
   }
@@ -34,13 +43,25 @@ export class Parameters {
 
   selectMapping(index) {
     this.mappingIndex = ((index % MAPPING_PRESETS.length) + MAPPING_PRESETS.length) % MAPPING_PRESETS.length;
-    const preset = MAPPING_PRESETS[this.mappingIndex];
-    this.targetMappingAmount = preset.amount;
-    this.targetMappingAxis = preset.axis;
+    this.targetMapping = this.mappingIndex;
   }
 
   cycleMapping() {
     this.selectMapping(this.mappingIndex + 1);
+  }
+
+  cycleFamily() {
+    this.familyIndex = (this.familyIndex + 1) % PATTERN_FAMILIES.length;
+    this.targetFamily = this.familyIndex;
+  }
+
+  cycleSymmetry() {
+    this.symmetryIndex = (this.symmetryIndex + 1) % SYMMETRY_TYPES.length;
+    this.targetSymmetry = this.symmetryIndex;
+  }
+
+  disturb(amount) {
+    this.targetInstability = Math.min(1, this.targetInstability + amount);
   }
 
   update(deltaSeconds) {
@@ -49,7 +70,10 @@ export class Parameters {
     // Exponential easing remains frame-rate independent and lets mappings reorganize visibly.
     this.orientation = approach(this.orientation, this.targetOrientation, 5, deltaSeconds);
     this.frequency = approach(this.frequency, this.targetFrequency, 5, deltaSeconds);
-    this.mappingAmount = approach(this.mappingAmount, this.targetMappingAmount, 1.5, deltaSeconds);
-    this.mappingAxis = approach(this.mappingAxis, this.targetMappingAxis, 1.35, deltaSeconds);
+    this.mapping = approach(this.mapping, this.targetMapping, 1.7, deltaSeconds);
+    this.family = approach(this.family, this.targetFamily, 1.45, deltaSeconds);
+    this.symmetry = approach(this.symmetry, this.targetSymmetry, 1.4, deltaSeconds);
+    this.targetInstability = approach(this.targetInstability, 0.08, 0.75, deltaSeconds);
+    this.instability = approach(this.instability, this.targetInstability, 4, deltaSeconds);
   }
 }
