@@ -14,19 +14,28 @@ Then open <http://localhost:5173>. The dependency-free development server uses N
 
 ## Publish on GitHub Pages
 
-The artwork is a static site; `npm run dev` is only a convenience for local development and is not required in production. A GitHub Actions workflow deploys the repository root whenever `main` is updated. In the repository, choose **Settings → Pages → Build and deployment → Source: GitHub Actions** once, then push or merge to `main`. The published project URL will be `https://<username>.github.io/<repository>/`.
+The artwork is a static site; `npm run dev` is only a convenience for local development and is not required in production. All publishable files live in `docs/`, which supports both GitHub Pages publishing options:
 
-The `.nojekyll` marker tells Pages to serve the shader and source directories exactly as committed. All browser asset links are relative, so a project subpath such as `/nightmare/` is supported.
+- **Recommended:** choose **Settings → Pages → Build and deployment → Source: GitHub Actions**. The included workflow uploads `docs/` whenever `main` is updated.
+- **Branch fallback:** choose **Deploy from a branch**, select `main`, and select `/docs` as the folder.
+
+Do not combine a Jekyll workflow with the `/docs` source. This project does not use Jekyll, Ruby, themes, or an `assets/css/style.scss` build step. The published project URL will be `https://<username>.github.io/<repository>/`.
+
+The `docs/.nojekyll` marker tells Pages to serve the shader and source directories exactly as committed. All browser asset links are relative, so a project subpath such as `/nightmare/` is supported.
 
 ## Interaction
 
 - **Move left/right:** rotate the underlying wave vector.
 - **Move up/down:** move from broad, slow bands to dense, intense bands.
-- **Click:** morph through rolls, square/grid interference, hexagonal interference, and rotational symmetry.
-- **M:** reorganize smoothly through Cartesian stripes, a concentric tunnel, radial rays, and a spiral.
-- **1–4:** select one of those coordinate mappings directly.
-- **S:** cycle the rotational structures 2222, 333, 442, and 632.
-- **D:** compare the simple pattern space and transformed perceptual space side by side.
+- **Click the artwork** or use the **PATTERN** button: morph through rolls, square/grid interference, hexagonal interference, and rotational symmetry.
+- **SPACE button:** reorganize smoothly through Cartesian stripes, a concentric tunnel, radial rays, and a spiral.
+- **ROTATION button:** cycle the rotational structures 2222, 333, 442, and 632.
+- **VIEW button:** compare the simple pattern space and transformed perceptual space side by side.
+- **MOTION button:** pause or resume automatic movement.
+
+The compact on-screen controls are the primary interface and always show the current state. Optional presentation shortcuts remain available:
+
+- **M / S / D:** cycle space, rotation, or research view.
 - **I:** toggle a minimal research information readout.
 - **Space:** pause/resume the internal breathing motion.
 - **R:** return to the initial state.
@@ -34,7 +43,7 @@ The `.nojekyll` marker tells Pages to serve the shader and source directories ex
 
 Fast pointer movement briefly increases deterministic instability; stopping lets the field reorganize and settle.
 
-There is intentionally no visible interface in this immersive version.
+The controls stay deliberately compact and monochrome so the geometry remains the dominant visual element.
 
 ## Mathematical system
 
@@ -63,16 +72,16 @@ This is **a research-informed artistic interpretation, not a scientific model or
 ## Structure
 
 ```text
-index.html             page shell and p5.js dependency
 package.json           dependency-free npm development commands
-style.css              full-viewport presentation
 scripts/dev-server.mjs local static development server
-src/main.js            p5 lifecycle and application assembly
-src/artwork.js         WebGL renderer and uniform updates
-src/interaction.js     pointer and keyboard input
-src/parameters.js      state, mapping presets, and smoothing
-shaders/vertex.glsl    full-canvas vertex shader
-shaders/fragment.glsl  wave and coordinate mathematics
+docs/index.html        page shell and p5.js dependency
+docs/style.css         full-viewport presentation
+docs/src/main.js       p5 lifecycle and application assembly
+docs/src/artwork.js    WebGL renderer and uniform updates
+docs/src/interaction.js pointer and keyboard input
+docs/src/parameters.js state, mapping presets, and smoothing
+docs/shaders/*.glsl    full-canvas vertex and fragment shaders
+docs/.nojekyll         disable Jekyll processing
 ```
 
 ## Implemented development phases

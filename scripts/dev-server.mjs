@@ -2,7 +2,8 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve, sep } from "node:path";
 
-const root = resolve(import.meta.dirname, "..");
+// The browser-ready site lives in docs/, matching GitHub Pages' branch source.
+const root = resolve(import.meta.dirname, "../docs");
 const port = Number.parseInt(process.env.PORT ?? "5173", 10);
 const host = process.env.HOST ?? "0.0.0.0";
 
