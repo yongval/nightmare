@@ -25,7 +25,7 @@ export class Parameters {
 
   setPointer(normalX, normalY) {
     this.targetOrientation = normalX * TAU;
-    this.targetFrequency = 3.5 + normalY * 8.5;
+    this.targetFrequency = 2.5 + normalY * 9.5;
   }
 
   cycleSymmetry() {

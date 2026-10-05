@@ -26,8 +26,8 @@ float segmentDistance(vec2 p, vec2 a, vec2 b) {
 // An asymmetric two-part glyph is the seed for every wallpaper pattern.
 // Rotating the glyph, rather than reflecting it, keeps the four groups chiral.
 float seedGlyph(vec2 p) {
-  float stem = exp(-105.0 * segmentDistance(p, vec2(0.07, 0.04), vec2(0.31, 0.12)));
-  float hook = exp(-125.0 * abs(length(p - vec2(0.29, 0.21)) - 0.055));
+  float stem = exp(-75.0 * segmentDistance(p, vec2(0.07, 0.04), vec2(0.31, 0.12)));
+  float hook = exp(-90.0 * abs(length(p - vec2(0.29, 0.21)) - 0.055));
   hook *= smoothstep(-0.02, 0.08, p.x - 0.27);
   return max(stem, hook * 0.85);
 }
@@ -96,7 +96,7 @@ void main() {
 
   // Mouse frequency controls lattice scale; breathing and harmonic bending keep
   // the repeated construction ordered while allowing bodily instability.
-  p = orientation * p * uFrequency * (1.0 + 0.018 * sin(uTime * 0.7));
+  p = orientation * p * uFrequency * 0.82 * (1.0 + 0.018 * sin(uTime * 0.7));
   p += uInstability * 0.035 * vec2(
     sin(p.y * 2.0 + uTime * 1.7),
     cos(p.x * 2.0 - uTime * 1.3)
