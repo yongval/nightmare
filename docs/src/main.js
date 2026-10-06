@@ -7,11 +7,25 @@ const sketch = (p) => {
   let interaction;
   let shaderProgram;
   let firstFrame = true;
+  let shaderLoadFailed = false;
+
+  const showError = (error) => {
+    const status = document.querySelector("#status");
+    status.textContent = `ARTWORK ERROR: ${error?.message || error || "Unable to load shader"}`;
+    status.classList.remove("ready");
+    status.classList.add("error");
+    console.error("Fever Field failed to render:", error);
+  };
 
   p.preload = () => {
     shaderProgram = p.loadShader(
-      "shaders/vertex.glsl?v=wallpaper-v3",
-      "shaders/fragment.glsl?v=wallpaper-v3",
+      "shaders/vertex.glsl?v=wallpaper-v20",
+      "shaders/fragment.glsl?v=wallpaper-v20",
+      undefined,
+      (error) => {
+        shaderLoadFailed = true;
+        showError(error);
+      },
     );
   };
 
@@ -27,10 +41,17 @@ const sketch = (p) => {
   };
 
   p.draw = () => {
-    artwork.render();
-    if (firstFrame) {
-      document.querySelector("#status").classList.add("ready");
-      firstFrame = false;
+    if (shaderLoadFailed) return;
+    try {
+      artwork.render();
+      if (firstFrame) {
+        document.querySelector("#status").classList.add("ready");
+        firstFrame = false;
+      }
+    } catch (error) {
+      shaderLoadFailed = true;
+      showError(error);
+      p.noLoop();
     }
   };
   p.mouseMoved = () => interaction.pointerMovedAt(p.mouseX, p.mouseY);

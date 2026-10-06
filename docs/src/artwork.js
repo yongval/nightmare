@@ -1,12 +1,8 @@
-import { SYMMETRY_TYPES } from "./parameters.js";
-
 export class Artwork {
   constructor(p, shaderProgram, parameters) {
     this.p = p;
     this.shaderProgram = shaderProgram;
     this.parameters = parameters;
-    this.symmetryValue = document.querySelector('[data-action="symmetry"] strong');
-    this.pauseControl = document.querySelector('[data-action="pause"]');
   }
 
   render() {
@@ -19,12 +15,16 @@ export class Artwork {
     this.shaderProgram.setUniform("uTime", state.elapsed);
     this.shaderProgram.setUniform("uOrientation", state.orientation);
     this.shaderProgram.setUniform("uFrequency", state.frequency);
-    this.shaderProgram.setUniform("uSymmetry", state.symmetry);
+    this.shaderProgram.setUniform("uSymmetryFrom", state.symmetryFrom);
+    this.shaderProgram.setUniform("uSymmetryTo", state.symmetryTo);
+    this.shaderProgram.setUniform("uSymmetryMix", state.variantMix);
+    this.shaderProgram.setUniform("uCapsulePatternFrom", state.capsulePatternFrom);
+    this.shaderProgram.setUniform("uCapsulePatternTo", state.capsulePatternTo);
+    this.shaderProgram.setUniform("uCapsulePatternMix", state.variantMix);
+    this.shaderProgram.setUniform("uFormFrom", state.formFrom);
+    this.shaderProgram.setUniform("uFormTo", state.formTo);
+    this.shaderProgram.setUniform("uFormMix", state.variantMix);
     this.shaderProgram.setUniform("uInstability", state.instability);
-
-    this.symmetryValue.textContent = SYMMETRY_TYPES[state.symmetryIndex];
-    this.pauseControl.querySelector("strong").textContent = state.paused ? "PAUSED" : "PLAYING";
-    this.pauseControl.setAttribute("aria-pressed", state.paused);
 
     p.noStroke();
     p.rect(-p.width / 2, -p.height / 2, p.width, p.height);

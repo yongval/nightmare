@@ -1,6 +1,6 @@
 # Fever Field
 
-An interactive, full-screen study in black-and-white periodic waves, interference, log-polar transformation, rotational order, and controlled instability.
+An interactive, full-screen study in repeating glyphs, radial tilings, rotational order, and controlled instability.
 
 ## Run locally
 
@@ -27,29 +27,27 @@ The `docs/.nojekyll` marker tells Pages to serve the shader and source directori
 
 ### Verify the deployed release
 
-The planar-wallpaper release marks its `<body>` with `data-release="wallpaper-v2"`. If the public page is blank or has the old five-button panel, use **View Source** and search for `wallpaper-v2`. When it is absent, Pages is serving an older artifact: run the **Deploy static artwork to GitHub Pages** workflow from `main`. The workflow refuses to deploy unless both the release marker and the artwork controls are present. Versioned shader URLs prevent a browser from reusing the earlier blank shader.
+The planar-wallpaper release marks its `<body>` with `data-release="wallpaper-v2"`. If the public page is blank or shows an older version, use **View Source** and search for `wallpaper-v2`. When it is absent, Pages is serving an older artifact: run the **Deploy static artwork to GitHub Pages** workflow from `main`. The workflow verifies the release marker and the artwork entry point. Versioned shader URLs prevent a browser from reusing an earlier shader.
 
 ## Interaction
 
 - **Move left/right:** rotate the underlying wave vector.
 - **Move up/down:** move from broad, slow bands to dense, intense bands.
-- **Click the artwork** or use the **SYMMETRY** button: cycle the repeating planar groups 2222, 333, 442, and 632.
-- **MOTION button:** pause or resume automatic movement.
+- **Click the artwork:** cycle through all six capsule arrangements, the Marjorie Rice-inspired 70° pentagon tiling, and all four wallpaper symmetries, in that order. The sequence returns to the first capsule arrangement after the last wallpaper symmetry. Every variation crossfades smoothly.
+- **Motion:** slow rotation and breathing scale animation run continuously across all three styles.
 
-The compact on-screen controls are the primary interface and always show the current state. Optional presentation shortcuts remain available:
+Optional keyboard shortcuts remain available:
 
-- **S:** cycle symmetry group.
-- **Space:** pause/resume the internal breathing motion.
+- **V:** cycle to the next artwork variation.
+- **Space:** pause/resume the animation.
 - **R:** return to the initial state.
 - **F:** enter or leave fullscreen.
 
 Fast pointer movement briefly increases deterministic instability; stopping lets the field reorganize and settle.
 
-The controls stay deliberately compact and monochrome so the geometry remains the dominant visual element.
-
 ## Mathematical system
 
-This version begins with an asymmetric continuous glyph made from line and arc distance fields. It constructs a rotational orbit of that glyph, then repeats the orbit on a compatible translation lattice:
+The wallpaper style begins with a connected dash-and-arc glyph. It constructs a rotational orbit of that motif, then repeats the orbit on a compatible translation lattice:
 
 - **2222 / p2:** 2-fold glyph on a square translation lattice
 - **333 / p3:** 3-fold glyph on a triangular translation lattice
@@ -58,7 +56,7 @@ This version begins with an asymmetric continuous glyph made from line and arc d
 
 Repeating neighboring cells in the fragment shader makes the field continuous across every tile boundary. The asymmetric seed and rotational copies avoid introducing reflection as a construction operation. The notation describes the orders of rotation centers present in each orientation-preserving wallpaper group; it is no longer used merely as a visual label.
 
-Mouse X rotates the complete plane and mouse Y changes the translation-lattice density. Instability remains deterministic rather than random: mouse velocity briefly raises the amplitude of paired sine/cosine domain bends, then the pattern settles. A restrained scale oscillation supplies the breathing motion.
+Mouse X rotates the complete plane and mouse Y changes the translation-lattice density. Instability remains deterministic rather than random: mouse velocity briefly raises the amplitude of paired sine/cosine domain bends, then the pattern settles. A slow rotational drift and restrained scale oscillation animate all three styles continuously; press Space to pause or resume them.
 
 The equations are evaluated once per pixel in GLSL. JavaScript only smooths interaction values and passes uniforms, keeping rendering suitable for real time.
 
@@ -66,7 +64,7 @@ The equations are evaluated once per pixel in GLSL. JavaScript only smooths inte
 
 The project is informed by Heinrich Klüver's descriptions of geometric *form constants* and by later work from Bressloff and collaborators on geometric visual hallucinations, Euclidean symmetry, cortical pattern formation, and retino-cortical mapping. The emergence of complex visual structure from a small periodic construction takes that research as a conceptual point of departure.
 
-This is **a research-informed artistic interpretation, not a scientific model or an explanation of fever dreams**. In particular, the breathing, instability, glyph design, tonal treatment, and association with a personal fever-dream memory are aesthetic decisions. The four constructions use planar symmetry material from the associated course as an artistic extension; the project does not claim that hallucination research is based on the 17 wallpaper groups.
+This is **a research-informed artistic interpretation, not a scientific model or an explanation of fever dreams**. In particular, the breathing, instability, glyph design, tonal treatment, and association with a personal fever-dream memory are aesthetic decisions. The wallpaper constructions use planar symmetry material from the associated course as an artistic extension; the project does not claim that hallucination research is based on the 17 wallpaper groups.
 
 ## Structure
 
@@ -85,6 +83,6 @@ docs/.nojekyll         disable Jekyll processing
 
 ## Implemented development phases
 
-The current iteration deliberately reduces the system to four continuous planar constructions, one symmetry control, and one motion control. Each symmetry selection now changes the entire repeating field rather than affecting only a separate rotational mode.
+The default style repeats a fine connected dash-and-hook motif on square and triangular translation lattices. The STYLE control also offers a fixed 10-fold radial pentagon mosaic inspired by the Marjorie Rice 70° reference and six rounded-capsule arrangements: Tight, Crossed, Weavy, Circular, Modular, and Diagonal. The symmetry control cycles the arrangement when Capsule is selected; wrapping from the last option to the first applies immediately without animating backward through the intervening patterns.
 
 Potential later work includes more rigorous reflection and glide-reflection constructions, reproducible saved states, accessibility controls for visual intensity, and performance profiling across mobile GPUs.

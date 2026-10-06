@@ -4,16 +4,6 @@ export class Interaction {
     this.parameters = parameters;
     this.previousX = null;
     this.previousY = null;
-    this.bindControls();
-  }
-
-  bindControls() {
-    document.querySelector("#controls").addEventListener("click", (event) => {
-      const action = event.target.closest("button")?.dataset.action;
-      if (action === "symmetry") this.parameters.cycleSymmetry();
-      if (action === "pause") this.parameters.paused = !this.parameters.paused;
-      event.stopPropagation();
-    });
   }
 
   updatePointer(x, y) {
@@ -35,13 +25,13 @@ export class Interaction {
   }
 
   clicked(event) {
-    if (!event?.target?.closest?.("#controls")) this.parameters.cycleSymmetry();
+    this.parameters.cycleVariant();
     return false;
   }
 
   keyPressed(key, keyCode) {
     if (key === " " || keyCode === 32) this.parameters.paused = !this.parameters.paused;
-    else if (key.toLowerCase() === "s") this.parameters.cycleSymmetry();
+    else if (key.toLowerCase() === "v") this.parameters.cycleVariant();
     else if (key.toLowerCase() === "f") this.p.fullscreen(!this.p.fullscreen());
     else if (key.toLowerCase() === "r") this.parameters.reset();
     else return true;
