@@ -58,6 +58,20 @@ vec2 rotatePoint(vec2 p, float angle) {
   return mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * p;
 }
 
+float tileSeed(vec2 cellId) {
+  return fract(sin(dot(cellId, vec2(127.1, 311.7))) * 43758.5453) * 2.0 * PI;
+}
+
+vec2 animateTile(vec2 p, vec2 cellId) {
+  float seed = tileSeed(cellId);
+  float rate = 0.72 + 0.18 * sin(seed * 1.7);
+  float phase = uTime * rate + seed;
+  vec2 drift = 0.04 * vec2(sin(phase), cos(phase * 0.83 + seed));
+  float rotation = 0.12 * sin(phase * 0.61 + seed);
+  float breath = 1.0 + 0.035 * sin(phase * 0.74 + seed);
+  return rotatePoint((p - drift) * breath, rotation);
+}
+
 float glyph2(vec2 p) {
   return max(seedGlyph(p), seedGlyph(-p));
 }
@@ -89,16 +103,19 @@ vec2 squareCell(vec2 p) {
 }
 
 // Nearest triangular-lattice cell, used by 333 (p3) and 632 (p6).
-vec2 triangularCell(vec2 p) {
+vec2 triangularCell(vec2 p, out vec2 cellId) {
   vec2 lattice = vec2(p.x - p.y / SQRT3, 2.0 * p.y / SQRT3);
-  vec2 cell = floor(lattice + 0.5);
-  vec2 center = vec2(cell.x + 0.5 * cell.y, 0.5 * SQRT3 * cell.y);
+  cellId = floor(lattice + 0.5);
+  vec2 center = vec2(cellId.x + 0.5 * cellId.y, 0.5 * SQRT3 * cellId.y);
   return p - center;
 }
 
 float wallpaper(vec2 p, float group) {
-  vec2 square = squareCell(p);
-  vec2 triangular = triangularCell(p);
+  vec2 squareId = floor(p + 0.5);
+  vec2 square = animateTile(squareCell(p), squareId);
+  vec2 triangularId;
+  vec2 triangular = triangularCell(p, triangularId);
+  triangular = animateTile(triangular, triangularId);
   float p2 = glyph2(square);
   float p3 = glyph3(triangular);
   float p4 = glyph4(square);
@@ -134,7 +151,10 @@ float riceTiling(vec2 p) {
     for (int sectorOffset = -1; sectorOffset <= 1; sectorOffset++) {
       float sector = mod(sectorBase + float(sectorOffset), count);
       float angle = stagger + (sector + 0.5) * stepAngle;
-      vec2 center = ringRadius * vec2(cos(angle), sin(angle));
+      float seed = tileSeed(vec2(ringValue, sector));
+      float phase = uTime * (0.72 + 0.18 * sin(seed * 1.7)) + seed;
+      vec2 center = ringRadius * vec2(cos(angle), sin(angle))
+        + 0.035 * vec2(sin(phase), cos(phase * 0.83 + seed));
       float distanceToCenter = length(p - center);
 
       if (distanceToCenter < nearest) {
@@ -166,21 +186,23 @@ float capsulePattern(vec2 p, float pattern) {
 
   if (mode < 0.5) {
     vec2 pitch = vec2(0.72, 0.58);
+    vec2 cellId = floor(p / pitch + 0.5);
     vec2 cell = fract(p / pitch + 0.5) - 0.5;
-    distanceToShape = roundedCapsule(cell * pitch, 0.27, 0.16);
+    distanceToShape = roundedCapsule(animateTile(cell * pitch, cellId), 0.27, 0.16);
   } else if (mode < 1.5) {
     vec2 pitch = vec2(0.94, 0.78);
     vec2 cellId = floor(p / pitch + 0.5);
     vec2 cell = fract(p / pitch + 0.5) - 0.5;
     float angle = mix(-PI / 4.0, PI / 4.0, mod(abs(cellId.x + cellId.y), 2.0));
-    distanceToShape = roundedCapsule(rotatePoint(cell * pitch, angle), 0.31, 0.14);
+    distanceToShape = roundedCapsule(animateTile(rotatePoint(cell * pitch, angle), cellId), 0.31, 0.14);
   } else if (mode < 2.5) {
     vec2 woven = p;
     woven.x += 0.19 * sin(p.y * 2.7);
     woven.y += 0.12 * sin(woven.x * 2.4);
     vec2 pitch = vec2(0.82, 0.64);
+    vec2 cellId = floor(woven / pitch + 0.5);
     vec2 cell = fract(woven / pitch + 0.5) - 0.5;
-    distanceToShape = roundedCapsule(cell * pitch, 0.29, 0.15);
+    distanceToShape = roundedCapsule(animateTile(cell * pitch, cellId), 0.29, 0.15);
   } else if (mode < 3.5) {
     float radius = length(p);
     float angle = atan(p.y, p.x);
@@ -191,12 +213,12 @@ float capsulePattern(vec2 p, float pattern) {
     float tileAngle = sector * stepAngle;
     vec2 center = 0.78 * ring * vec2(cos(tileAngle), sin(tileAngle));
     vec2 local = rotatePoint(p - center, -tileAngle);
-    distanceToShape = roundedCapsule(local, 0.29, 0.15);
+    distanceToShape = roundedCapsule(animateTile(local, vec2(ring, sector)), 0.29, 0.15);
   } else if (mode < 4.5) {
     vec2 pitch = vec2(1.72, 1.5);
     vec2 moduleId = floor(p / pitch + 0.5);
     vec2 module = fract(p / pitch + 0.5) - 0.5;
-    vec2 local = abs(module * pitch);
+    vec2 local = abs(animateTile(module * pitch, moduleId));
     float horizontal = roundedCapsule(local - vec2(0.42, 0.0), 0.31, 0.14);
     float vertical = roundedCapsule(rotatePoint(local - vec2(0.0, 0.42), PI * 0.5), 0.31, 0.14);
     float center = length(local) - 0.19;
@@ -207,8 +229,9 @@ float capsulePattern(vec2 p, float pattern) {
     vec2 pitch = vec2(0.72, 0.82);
     float row = floor(rotated.y / pitch.y);
     float x = rotated.x / pitch.x - 0.5 * mod(row, 2.0);
+    vec2 cellId = vec2(floor(x + 0.5), row);
     vec2 cell = vec2(fract(x + 0.5) - 0.5, fract(rotated.y / pitch.y + 0.5) - 0.5);
-    distanceToShape = roundedCapsule(cell * pitch, 0.31, 0.15);
+    distanceToShape = roundedCapsule(animateTile(cell * pitch, cellId), 0.31, 0.15);
   }
 
   float shape = 1.0 - smoothstep(-0.008, 0.008, distanceToShape);

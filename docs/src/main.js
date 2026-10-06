@@ -19,8 +19,8 @@ const sketch = (p) => {
 
   p.preload = () => {
     shaderProgram = p.loadShader(
-      "shaders/vertex.glsl?v=wallpaper-v20",
-      "shaders/fragment.glsl?v=wallpaper-v20",
+      "shaders/vertex.glsl?v=wallpaper-v21",
+      "shaders/fragment.glsl?v=wallpaper-v21",
       undefined,
       (error) => {
         shaderLoadFailed = true;

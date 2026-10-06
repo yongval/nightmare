@@ -4,7 +4,7 @@
 
 The work develops these memories through a series of repeating visual structures. It combines capsule-like motifs, radial forms inspired by Marjorie Rice’s pentagonal tilings, and different arrangements developed through experiments with repetition and symmetry.
 
-The patterns rotate continuously, while interaction allows the viewer to move deeper into or further away from the repeating field.
+The patterns rotate continuously, and the repeating motifs drift, tilt, and subtly pulse with different timing. Interaction allows the viewer to move deeper into or further away from the repeating field.
 
 The project is also visually informed by research on recurring patterns in geometric visual hallucinations, but it does not attempt to reproduce or scientifically explain those phenomena.
 
